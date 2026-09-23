@@ -25,9 +25,6 @@ export default function Home() {
   ).length;
 
   // Crear tarea
-  const crearTarea = (
-    evento: React.KeyboardEvent<HTMLInputElement>
-  ) => {
   const crearTarea = (evento: React.KeyboardEvent<HTMLInputElement>) => {
     if (evento.key === "Enter") {
       const texto = nuevaTarea.trim();
