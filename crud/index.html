@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Lista de Tareas</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <section class="lista-tareas">
+
+            <h1>Mi Lista de Tareas</h1>
+
+            <p class="descripcion">
+                Organiza tus actividades de forma sencilla
+            </p>
+
+            <div class="entrada-tarea">
+                <input
+                    type="text"
+                    id="nuevaTarea"
+                    placeholder="Escribe una tarea y presiona Enter..."
+                    autocomplete="off"
+                >
+            </div>
+
+            
+            <div id="listaTareas" class="tareas">
+            </div>
+
+
+            <p id="mensajeVacio" class="mensaje-vacio">
+                No tienes tareas pendientes.
+            </p>
+
+        </section>
+
+    </main>
+
+    <script src="app.js"></script>
+
+</body>
+</html>
+```

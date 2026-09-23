@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Installation
+Firs, install the project dependencies
+
+npm install
+
 ## Getting Started
 
 First, run the development server:
@@ -15,6 +20,16 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying app/page.tsx. The page auto-updates as you edit the file
+
+This project uses next/front to automatically optimize and load Geist, a new font family for Vercel.
+
+##Team Menbers
+-Integrante 1: Carlos Buelvas
+-Integrante 2: Alvaro Gomez
+-Integrabte 3: Junior Roca 
+-Integrante 4: Diego Theran López
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
