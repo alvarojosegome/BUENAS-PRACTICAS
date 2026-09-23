@@ -10,10 +10,24 @@ interface Tarea {
 
 export default function Home() {
   const [tareas, setTareas] = useState<Tarea[]>([]);
+  const [papelera, setPapelera] = useState<Tarea[]>([]);
   const [nuevaTarea, setNuevaTarea] = useState("");
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [textoEditado, setTextoEditado] = useState("");
 
+  // Contadores
+  const tareasRealizadas = tareas.filter(
+    (tarea) => tarea.completada
+  ).length;
+
+  const tareasPorRealizar = tareas.filter(
+    (tarea) => !tarea.completada
+  ).length;
+
+  // Crear tarea
+  const crearTarea = (
+    evento: React.KeyboardEvent<HTMLInputElement>
+  ) => {
   const crearTarea = (evento: React.KeyboardEvent<HTMLInputElement>) => {
     if (evento.key === "Enter") {
       const texto = nuevaTarea.trim();
@@ -31,11 +45,13 @@ export default function Home() {
     }
   };
 
+  // Comenzar edición
   const comenzarEdicion = (tarea: Tarea) => {
     setEditandoId(tarea.id);
     setTextoEditado(tarea.texto);
   };
 
+  // Guardar edición
   const guardarEdicion = () => {
     if (editandoId === null) return;
 
@@ -55,6 +71,7 @@ export default function Home() {
     setTextoEditado("");
   };
 
+  // Cambiar estado de completada
   const cambiarCompletada = (id: number) => {
     setTareas((actuales) =>
       actuales.map((tarea) =>
@@ -65,10 +82,52 @@ export default function Home() {
     );
   };
 
+  // Mover tarea a la papelera
   const eliminarTarea = (id: number) => {
+    const tareaAEliminar = tareas.find(
+      (tarea) => tarea.id === id
+    );
+
+    if (!tareaAEliminar) return;
+
+    setPapelera((actuales) => [
+      ...actuales,
+      tareaAEliminar,
+    ]);
+
     setTareas((actuales) =>
       actuales.filter((tarea) => tarea.id !== id)
     );
+  };
+
+  // Restaurar tarea desde la papelera
+  const restaurarTarea = (id: number) => {
+    const tareaARestaurar = papelera.find(
+      (tarea) => tarea.id === id
+    );
+
+    if (!tareaARestaurar) return;
+
+    setTareas((actuales) => [
+      ...actuales,
+      tareaARestaurar,
+    ]);
+
+    setPapelera((actuales) =>
+      actuales.filter((tarea) => tarea.id !== id)
+    );
+  };
+
+  // Eliminar definitivamente
+  const eliminarDefinitivamente = (id: number) => {
+    setPapelera((actuales) =>
+      actuales.filter((tarea) => tarea.id !== id)
+    );
+  };
+
+  // Vaciar papelera
+  const vaciarPapelera = () => {
+    setPapelera([]);
   };
 
   return (
@@ -80,17 +139,42 @@ export default function Home() {
           Organiza tus actividades de forma sencilla
         </p>
 
+        {/* Contadores */}
+        <div className="contadores">
+          <div className="contador pendientes">
+            <span className="numero">
+              {tareasPorRealizar}
+            </span>
+            <span className="texto">
+              Por realizar
+            </span>
+          </div>
+
+          <div className="contador realizadas">
+            <span className="numero">
+              {tareasRealizadas}
+            </span>
+            <span className="texto">
+              Realizadas
+            </span>
+          </div>
+        </div>
+
+        {/* Entrada de nueva tarea */}
         <div className="entrada-tarea">
           <input
             type="text"
             placeholder="Escribe una tarea y presiona Enter..."
             autoComplete="off"
             value={nuevaTarea}
-            onChange={(evento) => setNuevaTarea(evento.target.value)}
+            onChange={(evento) =>
+              setNuevaTarea(evento.target.value)
+            }
             onKeyDown={crearTarea}
           />
         </div>
 
+        {/* Lista de tareas */}
         <div className="tareas">
           {tareas.map((tarea) => (
             <div
@@ -102,7 +186,9 @@ export default function Home() {
               <button
                 type="button"
                 className="boton-completar"
-                onClick={() => cambiarCompletada(tarea.id)}
+                onClick={() =>
+                  cambiarCompletada(tarea.id)
+                }
                 aria-label="Completar tarea"
               >
                 {tarea.completada ? "✓" : ""}
@@ -127,7 +213,9 @@ export default function Home() {
               ) : (
                 <span
                   className="texto-tarea"
-                  onClick={() => comenzarEdicion(tarea)}
+                  onClick={() =>
+                    comenzarEdicion(tarea)
+                  }
                 >
                   {tarea.texto}
                 </span>
@@ -136,9 +224,11 @@ export default function Home() {
               <button
                 type="button"
                 className="boton-eliminar"
-                onClick={() => eliminarTarea(tarea.id)}
-                title="Eliminar tarea"
-                aria-label="Eliminar tarea"
+                onClick={() =>
+                  eliminarTarea(tarea.id)
+                }
+                title="Mover a la papelera"
+                aria-label="Mover a la papelera"
               >
                 🗑️
               </button>
@@ -152,6 +242,71 @@ export default function Home() {
           </p>
         )}
       </section>
+
+      {/* PAPELERA */}
+      <section className="papelera">
+        <div className="encabezado-papelera">
+          <div>
+            <h2>🗑️ Papelera</h2>
+            <p>
+              {papelera.length}{" "}
+              {papelera.length === 1
+                ? "tarea eliminada"
+                : "tareas eliminadas"}
+            </p>
+          </div>
+
+          {papelera.length > 0 && (
+            <button
+              type="button"
+              className="boton-vaciar"
+              onClick={vaciarPapelera}
+            >
+              Vaciar papelera
+            </button>
+          )}
+        </div>
+
+        {papelera.length === 0 ? (
+          <p className="papelera-vacia">
+            La papelera está vacía.
+          </p>
+        ) : (
+          <div className="tareas-papelera">
+            {papelera.map((tarea) => (
+              <div
+                className="tarea-papelera"
+                key={tarea.id}
+              >
+                <span>{tarea.texto}</span>
+
+                <div className="acciones-papelera">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      restaurarTarea(tarea.id)
+                    }
+                    title="Restaurar tarea"
+                  >
+                    ↩️
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      eliminarDefinitivamente(tarea.id)
+                    }
+                    title="Eliminar definitivamente"
+                  >
+                    ❌
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
     </main>
   );
 }
+
