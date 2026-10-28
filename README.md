@@ -17,7 +17,7 @@ npm run dev
 The terminal should show something similar to:
 Local: http://localhost:3000
 Open that address in your web browser to see your application.
-To stop the application, go back to the terminal and press Ctrl + C.
+To stop the application, go back to the terminal and press Ctrl + C....
 
 ## Main Features
 
