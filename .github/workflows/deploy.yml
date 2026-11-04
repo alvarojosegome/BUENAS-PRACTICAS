@@ -29,9 +29,3 @@ jobs:
 
       - name: Subir out/ a S3
         run: aws s3 sync ./out s3://${{ secrets.S3_BUCKET }} --delete
-          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-
-      - name: Copiar HTML y el resto a EC2 (sin _next)
-        run: |
-          rsync -avz --delete --exclude '_next/' -e "ssh -i ~/.ssh/key.pem" \
-            ./out/ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/html/
